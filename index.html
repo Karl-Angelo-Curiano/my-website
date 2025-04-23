@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GameDev Portfolio</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      margin: 0;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+      max-width: 500px;
+    }
+    .link-card {
+      background: #1e293b;
+      border-radius: 12px;
+      padding: 1.2rem 2rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      text-align: center;
+      transition: transform 0.2s, background 0.3s;
+    }
+    .link-card:hover {
+      transform: scale(1.05);
+      background: #334155;
+    }
+    a {
+      text-decoration: none;
+      color: #38bdf8;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .emoji {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Software Developer Portfolio</h1>
+    <p>Indie Game Developer • Unity & Godot • C# Developer • Visual Studio </p>
+  </header>
+
+  <div class="links">
+    <div class="link-card">
+      <a href="https://github.com" target="_blank">
+        <span class="emoji">🐱‍💻</span>GitHub - My Code & Projects
+      </a>
+    </div>
+    <div class="link-card">
+      <a href="https://alpas-kerub1n.itch.io/" target="_blank">
+        <span class="emoji">🕹️</span>Itch.io - Play My Games
+      </a>
+    </div>
+	<div class="link-card">
+	  <a href="mailto:karlcuriano7@gmail.com">
+		<span class="emoji">📧</span>Contact Me
+	  </a>
+	</div>
+
+  </div>
+</body>
+</html>
