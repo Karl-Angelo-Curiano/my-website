@@ -1,86 +1,508 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>GameDev Portfolio</title>
+  <title>Karl Angelo Curiano — GameDev Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #050a0f;
+      --surface: #0a1520;
+      --surface2: #0d1e2e;
+      --cyan: #00e5ff;
+      --cyan-dim: rgba(0,229,255,0.12);
+      --cyan-glow: rgba(0,229,255,0.35);
+      --green: #39ff6e;
+      --green-dim: rgba(57,255,110,0.1);
+      --amber: #ffc947;
+      --text: #c8dde8;
+      --text-dim: #4a6a80;
+      --border: rgba(0,229,255,0.18);
+      --font-display: 'Orbitron', monospace;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
+      font-family: var(--font-mono);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* CUSTOM CURSOR */
+    .cursor {
+      position: fixed; top: 0; left: 0;
+      width: 20px; height: 20px;
+      border: 1.5px solid var(--cyan);
+      border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.15s, height 0.15s, border-color 0.15s, background 0.15s;
+      mix-blend-mode: screen;
+    }
+    .cursor.hovering {
+      width: 36px; height: 36px;
+      background: rgba(0,229,255,0.08);
+      border-color: var(--green);
+    }
+    .cursor-dot {
+      position: fixed; top: 0; left: 0;
+      width: 4px; height: 4px;
+      background: var(--cyan);
+      border-radius: 50%;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%, -50%);
+    }
+
+    /* SCANLINE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none; z-index: 100;
+    }
+
+    /* GRID BACKGROUND */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
       align-items: center;
-      padding: 2rem;
-      margin: 0;
+      justify-content: center;
+      padding: 3rem 1.5rem;
     }
-    header {
+
+    /* HEADER */
+    .header {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 3.5rem;
+      animation: fadeSlideDown 0.8s ease both;
     }
+
+    .header-tag {
+      font-size: 0.7rem; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--cyan);
+      margin-bottom: 1rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    }
+    .header-tag::before, .header-tag::after {
+      content: ''; display: block;
+      height: 1px; width: 40px;
+      background: linear-gradient(to right, transparent, var(--cyan));
+    }
+    .header-tag::after {
+      background: linear-gradient(to left, transparent, var(--cyan));
+    }
+
     h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      line-height: 1.1;
+      color: #fff;
+      text-shadow: 0 0 40px var(--cyan-glow), 0 0 80px rgba(0,229,255,0.15);
+      margin-bottom: 0.4rem;
     }
-    p {
-      font-size: 1.1rem;
-      color: #ccc;
+
+    .glitch {
+      position: relative;
+      display: inline-block;
     }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+    .glitch::before {
+      color: var(--cyan);
+      animation: glitch1 3.5s infinite;
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+    }
+    .glitch::after {
+      color: var(--green);
+      animation: glitch2 3.5s infinite;
+      clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+    }
+
+    @keyframes glitch1 {
+      0%, 90%, 100% { transform: translate(0); opacity: 0; }
+      92% { transform: translate(-3px, 1px); opacity: 0.7; }
+      94% { transform: translate(3px, -1px); opacity: 0.5; }
+      96% { transform: translate(0); opacity: 0; }
+    }
+    @keyframes glitch2 {
+      0%, 90%, 100% { transform: translate(0); opacity: 0; }
+      93% { transform: translate(3px, -2px); opacity: 0.6; }
+      95% { transform: translate(-3px, 2px); opacity: 0.4; }
+      97% { transform: translate(0); opacity: 0; }
+    }
+
+    .subtitle {
+      font-size: 0.8rem; letter-spacing: 0.15em;
+      color: var(--text-dim);
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 1rem;
+      margin-top: 0.75rem;
+    }
+    .subtitle-chip {
+      background: var(--cyan-dim);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.75rem;
+      font-size: 0.68rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--cyan);
+    }
+
+    /* STATUS BAR */
+    .status-bar {
+      display: flex; align-items: center; gap: 0.5rem;
+      margin-top: 1.25rem;
+      font-size: 0.7rem; color: var(--text-dim); letter-spacing: 0.1em;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* LINKS GRID */
     .links {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      width: 100%;
-      max-width: 500px;
+      display: flex; flex-direction: column;
+      gap: 1rem; width: 100%; max-width: 520px;
     }
+
     .link-card {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 1.2rem 2rem;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      text-align: center;
-      transition: transform 0.2s, background 0.3s;
-    }
-    .link-card:hover {
-      transform: scale(1.05);
-      background: #334155;
-    }
-    a {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0; overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      animation: fadeSlideUp 0.6s ease both;
       text-decoration: none;
-      color: #38bdf8;
-      font-size: 1.2rem;
-      font-weight: bold;
+      display: block;
     }
-    .emoji {
-      font-size: 1.5rem;
-      margin-right: 0.5rem;
+    .link-card:nth-child(1) { animation-delay: 0.15s; }
+    .link-card:nth-child(2) { animation-delay: 0.28s; }
+    .link-card:nth-child(3) { animation-delay: 0.41s; }
+
+    .link-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--cyan-dim) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .link-card:hover { transform: translateX(6px); border-color: var(--cyan); }
+    .link-card:hover::before { opacity: 1; }
+
+    /* Accent stripe left */
+    .link-card::after {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--cyan);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.25s ease;
+    }
+    .link-card:hover::after { transform: scaleY(1); }
+
+    .link-inner {
+      display: flex; align-items: center; gap: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      position: relative; z-index: 1;
+    }
+
+    .link-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .link-card:hover .link-icon {
+      background: var(--cyan-dim);
+      border-color: var(--cyan);
+    }
+
+    .link-body { flex: 1; }
+    .link-label {
+      font-family: var(--font-display);
+      font-size: 0.8rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: #fff; margin-bottom: 0.25rem;
+      transition: color 0.2s;
+    }
+    .link-card:hover .link-label { color: var(--cyan); }
+    .link-desc {
+      font-size: 0.72rem; color: var(--text-dim);
+      letter-spacing: 0.06em;
+    }
+
+    .link-arrow {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      transition: color 0.2s, transform 0.2s;
+    }
+    .link-card:hover .link-arrow {
+      color: var(--cyan);
+      transform: translateX(4px);
+    }
+
+    /* CORNER DECORATIONS */
+    .corner-tl, .corner-br {
+      position: absolute;
+      width: 12px; height: 12px;
+    }
+    .corner-tl { top: 0; left: 0; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+    .corner-br { bottom: 0; right: 0; border-bottom: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+
+    /* TECH STACK */
+    .tech-section {
+      margin-top: 2.5rem;
+      width: 100%; max-width: 520px;
+      animation: fadeSlideUp 0.6s 0.55s ease both;
+    }
+    .tech-label {
+      font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text-dim); margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .tech-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--border), transparent);
+    }
+    .tech-tags {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .tech-tag {
+      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      background: transparent;
+      transition: all 0.2s;
+    }
+    .tech-tag:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-dim);
+    }
+
+    /* FOOTER */
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.62rem; letter-spacing: 0.15em;
+      color: var(--text-dim); text-align: center;
+      animation: fadeSlideUp 0.6s 0.7s ease both;
+    }
+    .footer span { color: var(--cyan); }
+
+    /* FLOATING PIXELS */
+    .pixel {
+      position: fixed;
+      width: 4px; height: 4px;
+      background: var(--cyan);
+      opacity: 0;
+      animation: floatPixel linear infinite;
+      pointer-events: none; z-index: 0;
+    }
+    @keyframes floatPixel {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.3; }
+      100% { transform: translateY(-20px) rotate(360deg); opacity: 0; }
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* TYPEWRITER */
+    .typewriter {
+      overflow: hidden;
+      border-right: 2px solid var(--cyan);
+      white-space: nowrap;
+      animation: typing 2s steps(30, end) 0.5s both, blink 0.8s step-end 2.5s infinite;
+      max-width: fit-content; margin: 0 auto;
+    }
+    @keyframes typing {
+      from { max-width: 0; }
+      to { max-width: 100%; }
+    }
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    @media (max-width: 540px) {
+      h1 { font-size: 1.7rem; }
+      .link-inner { padding: 1rem 1.1rem; }
+      .link-icon { width: 40px; height: 40px; font-size: 1.1rem; }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>My Software Developer Portfolio</h1>
-    <p>Indie Game Developer • Unity & Godot • C# Developer • Visual Studio </p>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- Floating pixels -->
+<div class="pixel" style="left:8%;animation-duration:14s;animation-delay:0s;"></div>
+<div class="pixel" style="left:22%;animation-duration:18s;animation-delay:3s;background:var(--green);"></div>
+<div class="pixel" style="left:55%;animation-duration:12s;animation-delay:6s;"></div>
+<div class="pixel" style="left:75%;animation-duration:20s;animation-delay:1s;background:var(--amber);width:3px;height:3px;"></div>
+<div class="pixel" style="left:90%;animation-duration:16s;animation-delay:9s;background:var(--green);"></div>
+<div class="pixel" style="left:38%;animation-duration:22s;animation-delay:4s;width:3px;height:3px;"></div>
+
+<main>
+
+  <header class="header">
+    <div class="header-tag">Portfolio v2.0</div>
+    <h1>
+      <span class="glitch" data-text="KARL ANGELO">KARL ANGELO</span>
+    </h1>
+    <h1 style="font-size: clamp(1rem, 3vw, 1.6rem); font-weight:400; color: var(--cyan); text-shadow: 0 0 20px var(--cyan-glow); letter-spacing: 0.2em; margin-top: 0.3rem;">
+      <span class="typewriter">CURIANO</span>
+    </h1>
+    <div class="subtitle" style="margin-top:1.25rem;">
+      <span class="subtitle-chip">Indie GameDev</span>
+      <span class="subtitle-chip">Unity · Godot</span>
+      <span class="subtitle-chip">C# Dev</span>
+      <span class="subtitle-chip">Visual Studio</span>
+    </div>
+    <div class="status-bar">
+      <span class="status-dot"></span>
+      <span>Available for collaboration</span>
+    </div>
   </header>
 
-  <div class="links">
-    <div class="link-card">
-      <a href="https://github.com/Karl-Angelo-Curiano" target="_blank">
-        <span class="emoji">🐱‍💻</span>GitHub - My Code & Projects
-      </a>
-    </div>
-    <div class="link-card">
-      <a href="https://alpas-kerub1n.itch.io/" target="_blank">
-        <span class="emoji">🕹️</span>Itch.io - Play My Games
-      </a>
-    </div>
-	<div class="link-card">
-	  <a href="mailto:karlcuriano7@gmail.com">
-		<span class="emoji">📧</span>Contact Me
-	  </a>
-	</div>
+  <nav class="links" aria-label="Portfolio links">
 
+    <a class="link-card" href="https://github.com/Karl-Angelo-Curiano" target="_blank" rel="noopener">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="link-inner">
+        <div class="link-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="color:#c8dde8"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </div>
+        <div class="link-body">
+          <div class="link-label">GitHub</div>
+          <div class="link-desc">Source code · Projects · Open source</div>
+        </div>
+        <div class="link-arrow">→</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="https://alpas-kerub1n.itch.io/" target="_blank" rel="noopener">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="link-inner">
+        <div class="link-icon">
+          <svg width="22" height="22" viewBox="0 0 245.37 220.736" fill="currentColor" style="color:#c8dde8"><path d="M31.99 1.365C21.287 7.72.2 31.367.2 31.367c0 22.6 12.158 29.128 12.158 29.128v130.97c0 13.883 4.477 18.345 21.472 18.345h178.948c17.003 0 21.467-4.462 21.467-18.345V60.495S246.337 53.967 246.337 31.367c0 0-21.085-23.644-31.791-30.002-7.385-4.278-13.765-1.456-15.267 5.981L193.886 52.03c-2.117 1.165-4.326 2.284-6.593 3.329L170 30.928c-1.482-7.45-7.879-10.264-15.24-5.99L31.99 1.365zM122.685 68.74c27.107 0 49.082 21.973 49.082 49.08 0 27.107-21.975 49.083-49.082 49.083s-49.083-21.976-49.083-49.083c0-27.107 21.976-49.08 49.083-49.08z"/></svg>
+        </div>
+        <div class="link-body">
+          <div class="link-label">Itch.io</div>
+          <div class="link-desc">Play my games · Game jams · Releases</div>
+        </div>
+        <div class="link-arrow">→</div>
+      </div>
+    </a>
+
+    <a class="link-card" href="mailto:karlcuriano7@gmail.com">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="link-inner">
+        <div class="link-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:#c8dde8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div class="link-body">
+          <div class="link-label">Contact</div>
+          <div class="link-desc">karlcuriano7@gmail.com</div>
+        </div>
+        <div class="link-arrow">→</div>
+      </div>
+    </a>
+
+  </nav>
+
+  <div class="tech-section">
+    <div class="tech-label">Tech stack</div>
+    <div class="tech-tags">
+      <span class="tech-tag">Unity</span>
+      <span class="tech-tag">Godot</span>
+      <span class="tech-tag">C#</span>
+      <span class="tech-tag">GDScript</span>
+      <span class="tech-tag">Visual Studio</span>
+      <span class="tech-tag">Git</span>
+      <span class="tech-tag">2D / 3D</span>
+    </div>
   </div>
+
+  <footer class="footer">
+    <p>Designed & built by <span>Karl Angelo Curiano</span> &nbsp;·&nbsp; <span><?= date('Y') ?></span></p>
+  </footer>
+
+</main>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursorDot');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+  const lerp = (a, b, n) => a + (b - a) * n;
+  function animateCursor() {
+    cx = lerp(cx, mx, 0.12);
+    cy = lerp(cy, my, 0.12);
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+    dot.style.left = mx + 'px';
+    dot.style.top = my + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('.link-card, .tech-tag').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
+  });
+</script>
 </body>
 </html>
